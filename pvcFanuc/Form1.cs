@@ -12,6 +12,7 @@ using HslCommunication.BasicFramework;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using generalDatabase;
 
 
 namespace pvcFanuc
@@ -24,11 +25,11 @@ namespace pvcFanuc
         }
 
         private FanucInterfaceNet fanuc;
-        //oracleWEBKF weboracle = new oracleWEBKF();
+       oracleWEBKF weboracle = new oracleWEBKF();
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            timer2.Start();
         }
 
         private async void robotConn_Click(object sender, EventArgs e)
@@ -47,7 +48,8 @@ namespace pvcFanuc
                 {
 
                     robotConn.Enabled = false;
-                    robotConn.BackColor = Color.Green;
+                    connStatus.Text = "连接已经建立!";
+              
 
                 }
                 else
@@ -70,8 +72,17 @@ namespace pvcFanuc
 
         private void startRecord_Click(object sender, EventArgs e)
         {
+            if(comTime.Text!="")
+            {
+                timer1.Start();
+                startRecord.Enabled = false;
+            }
+            else
+            {
+                MessageBox.Show("请输入时间");
+            }
 
-            timer1.Start();
+       
 
   
         }
@@ -97,9 +108,9 @@ namespace pvcFanuc
 
             string sql = "insert into PVCFANUC values('" + robotName.Text + "','" + acTpos["Xyzwpr"][0].ToString() + "','" + acTpos["Xyzwpr"][1].ToString() + "','" + acTpos["Xyzwpr"][2].ToString() + "','" + acTpos["Xyzwpr"][3].ToString() + "','" + acTpos["Xyzwpr"][4].ToString() + "','" + acTpos["Xyzwpr"][5].ToString() + "','" + acTpos["Xyzwpr"][6].ToString() + "','" + acTpos["Joint"][0].ToString() + "','" + acTpos["Joint"][1].ToString() + "','" + acTpos["Joint"][2].ToString() + "','" + acTpos["Joint"][3].ToString() + "','" + acTpos["Joint"][4].ToString() + "','" + acTpos["Joint"][5].ToString() + "','" + acTpos["Joint"][6].ToString() + "','  "+DateTime.Now.ToString()+"')";
 
-            //weboracle.connOpen();
-            //weboracle.OrcGetCom(sql);
-            //weboracle.connClose();
+            weboracle.connOpen();
+            weboracle.OrcGetCom(sql);
+            weboracle.connClose();
 
 
 
@@ -111,11 +122,26 @@ namespace pvcFanuc
         private void endRead_Click(object sender, EventArgs e)
         {
             timer1.Stop();
+            startRecord.Enabled = true;
         }
 
         private void 数据查看ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("http://10.228.141.253:9080/sc/website/pvcfanuc/list.php");
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            timer2.Interval = 1000;
+            toolStripStatusLabel1.Text = DateTime.Now.ToLocalTime().ToString();
+        }
+
+        private void stopConn_Click(object sender, EventArgs e)
+        {
+            fanuc.ConnectClose();
+            robotConn.Enabled = true;
+            connStatus.Text = "连接已经断开!";
+
         }
     }
 }

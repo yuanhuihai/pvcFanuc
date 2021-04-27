@@ -36,8 +36,11 @@
     <ApplicationIcon>robot.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HslCommunication">
-      <HintPath>..\..\..\..\..\..\..\HslCommunicationDemo\HslCommunication.dll</HintPath>
+    <Reference Include="generalDatabase">
+      <HintPath>..\..\yuanService\ccrService\bin\Debug\generalDatabase.dll</HintPath>
+    </Reference>
+    <Reference Include="HslCommunication, Version=9.7.0.0, Culture=neutral, PublicKeyToken=cdb2261fa039ed67, processorArchitecture=MSIL">
+      <HintPath>..\packages\HslCommunication.9.7.0\lib\net451\HslCommunication.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
