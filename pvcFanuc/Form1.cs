@@ -12,7 +12,7 @@ using HslCommunication.BasicFramework;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using generalDatabase;
+
 
 namespace pvcFanuc
 {
@@ -24,7 +24,7 @@ namespace pvcFanuc
         }
 
         private FanucInterfaceNet fanuc;
-        oracleWEBKF weboracle = new oracleWEBKF();
+        //oracleWEBKF weboracle = new oracleWEBKF();
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -73,10 +73,7 @@ namespace pvcFanuc
 
             timer1.Start();
 
-         
-
-
-
+  
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -85,14 +82,30 @@ namespace pvcFanuc
 
           
 
-            OperateResult<string> pos = fanuc.ReadString("CurrentPose");
-            JObject jo = (JObject)JsonConvert.DeserializeObject(pos.Content);
+            OperateResult<string> actpos = fanuc.ReadString("CurrentPose");
+            JObject acTpos = (JObject)JsonConvert.DeserializeObject(actpos.Content);
 
-            string sql = "insert into PVCFANUC values('" + robotName.Text + "','" + jo["Xyzwpr"][0].ToString() + "','" + jo["Xyzwpr"][1].ToString() + "','" + jo["Xyzwpr"][2].ToString() + "','" + jo["Xyzwpr"][3].ToString() + "','" + jo["Xyzwpr"][4].ToString() + "','" + jo["Xyzwpr"][5].ToString() + "','" + jo["Xyzwpr"][6].ToString() + "','" + jo["Joint"][0].ToString() + "','" + jo["Joint"][1].ToString() + "','" + jo["Joint"][2].ToString() + "','" + jo["Joint"][3].ToString() + "','" + jo["Joint"][4].ToString() + "','" + jo["Joint"][5].ToString() + "','" + jo["Joint"][6].ToString() + "','  "+DateTime.Now.ToString()+"')";
+            xyz.Text = acTpos["Xyzwpr"].ToString();
+            joint.Text = acTpos["Joint"].ToString();
 
-            weboracle.connOpen();
-            weboracle.OrcGetCom(sql);
-            weboracle.connClose();
+            OperateResult<string> actfault = fanuc.ReadString("AlarmCurrent");
+            JObject actFault = (JObject)JsonConvert.DeserializeObject(actfault.Content);
+            nowfault.Text = actFault["Time"].ToString() + actFault["AlarmMessage"].ToString();
+
+
+
+
+            string sql = "insert into PVCFANUC values('" + robotName.Text + "','" + acTpos["Xyzwpr"][0].ToString() + "','" + acTpos["Xyzwpr"][1].ToString() + "','" + acTpos["Xyzwpr"][2].ToString() + "','" + acTpos["Xyzwpr"][3].ToString() + "','" + acTpos["Xyzwpr"][4].ToString() + "','" + acTpos["Xyzwpr"][5].ToString() + "','" + acTpos["Xyzwpr"][6].ToString() + "','" + acTpos["Joint"][0].ToString() + "','" + acTpos["Joint"][1].ToString() + "','" + acTpos["Joint"][2].ToString() + "','" + acTpos["Joint"][3].ToString() + "','" + acTpos["Joint"][4].ToString() + "','" + acTpos["Joint"][5].ToString() + "','" + acTpos["Joint"][6].ToString() + "','  "+DateTime.Now.ToString()+"')";
+
+            //weboracle.connOpen();
+            //weboracle.OrcGetCom(sql);
+            //weboracle.connClose();
+
+
+
+
+
+
         }
 
         private void endRead_Click(object sender, EventArgs e)
