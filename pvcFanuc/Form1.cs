@@ -35,6 +35,16 @@ namespace pvcFanuc
         private async void robotConn_Click(object sender, EventArgs e)
         {
 
+
+            if (robotName.Text == "")
+            {
+                MessageBox.Show("请输入机器人名字。。。");
+            }
+
+
+
+
+
             try
             {
                 // 连接
